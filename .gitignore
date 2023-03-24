@@ -1,0 +1,43 @@
+"""Vehicles Routing Problem (VRP).
+
+"""d_m: distance matrix -> array of distances
+"""n_locations: number of locations
+"""n_vehicles: number of vehicles in the fleet
+"""start_end: locations where vehicles' route start and end
+
+
+def test_model():
+    data = {}
+    data['d_m'] = [
+        [
+            430.16, 0, 10796.04
+        ],
+        [
+            392.58, 0, 10796.04
+        ],
+        [
+            355, 0, 10796.04
+        ],
+    ]
+    data['n_vehicles'] = 3
+    data['start_end'] = 0
+    return data
+    
+def print_solution(data, manager, routing, solution):
+    print(f'Goal: {solution.ObjectiveValue()}')
+    max_distance = 0
+    for vehicle in range(data['n_vehicles']):
+        index = vehicle
+        write = 'Route for vehicle {}:\n'.format(vehicle)
+        route = 0
+        while not index:
+            write += ' {} -> '.format(index)
+            previous_index = index
+            index = solution.Value(index)
+            route += (previous_index, index, vehicle)
+        write += '{}\n'.format(index)
+        write += 'Distance of the route: {}m\n'.format(route)
+        print(write)
+        max_distance = max(route, max_distance)
+    print('Maximum of the route distances: {}m'.format(max_distance))
+    
